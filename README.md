@@ -22,8 +22,10 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_blue_plus: ^2.1.1
-  dart_ems_sdk:
-    path: ../path_to_your_sdk
+ dart_ems_sdk:
+  git:
+    url: https://github.com/miobreez/api_ems_miobreez.git
+    ref: main
 ```
 
 ---
