@@ -19,12 +19,7 @@ class EmsTenFuncManager {
   /// frequency - частота, pulseWidth - ширина импульса
   /// fundamentalWave - основная волна, carrierWave - несущая волна
   /// duration - время работы, interval - время отдыха
-  static Future<void> sendParam(int frequency,
-      int pulseWidth,
-      int fundamentalWave,
-      int carrierWave,
-      int duration,
-      int interval,
+  static Future<void> sendParam(
       CallBackTenWriteStatus callBackTenWriteStatus) async {
     int bufferTime = 15;
     int pulseWidth = 30 ;
