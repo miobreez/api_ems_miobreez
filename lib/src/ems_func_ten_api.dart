@@ -19,18 +19,15 @@ class EmsTenFuncManager {
   /// frequency - частота, pulseWidth - ширина импульса
   /// fundamentalWave - основная волна, carrierWave - несущая волна
   /// duration - время работы, interval - время отдыха
-
   static Future<void> sendParam(
-      CallBackWriteStatus callBackWriteStatus) async {
-
+      CallBackTenWriteStatus callBackTenWriteStatus) async {
+    int bufferTime = 15;
+    int pulseWidth = 30 ;
     int frequency = 50;
-        int pulseWidth = 25 ;
-    int fundamentalWave = 1 ;
-    int carrierWave = 1 ;
-    int duration = 10 ;
-    int interval = 5 ;
-    int upTime = 1;
-    int downTime = 1;
+    int fundamentalWave = 1;
+    int carrierWave = 1;
+    int duration = 30;
+    int interval = 2;
     int valid = (0x3B +
         0x00 +
         0x14 +
@@ -41,11 +38,11 @@ class EmsTenFuncManager {
         fundamentalWave +
         carrierWave +
         0x00 +
-        upTime +
+        bufferTime +
         0x00 +
         duration +
         0x00 +
-        downTime +
+        bufferTime +
         0x00 +
         interval) &
     0xff;
@@ -61,11 +58,11 @@ class EmsTenFuncManager {
       fundamentalWave,
       carrierWave,
       0x00,
-      upTime,
+      bufferTime,
       0x00,
       duration,
       0x00,
-      downTime,
+      bufferTime,
       0x00,
       interval,
       valid,
@@ -81,81 +78,14 @@ class EmsTenFuncManager {
               .characteristic!
               .properties
               .writeWithoutResponse);
-      callBackWriteStatus(true);
+      callBackTenWriteStatus(true);
     } catch (e) {
       if (kDebugMode) {
         print("Write Error:");
       }
-      callBackWriteStatus(false);
+      callBackTenWriteStatus(false);
     }
   }
- //static Future<void> sendParam(
- //    CallBackTenWriteStatus callBackTenWriteStatus) async {
- //  int bufferTime = 15;
- //  int pulseWidth = 15 ;
- //  int frequency = 50;
- //  int fundamentalWave = 1;
- //  int carrierWave = 1;
- //  int duration = 30;
- //  int interval = 2;
- //  int valid = (0x3B +
- //      0x00 +
- //      0x14 +
- //      0x00 +
- //      0x01 +
- //      frequency +
- //      pulseWidth +
- //      fundamentalWave +
- //      carrierWave +
- //      0x00 +
- //      bufferTime +
- //      0x00 +
- //      duration +
- //      0x00 +
- //      bufferTime +
- //      0x00 +
- //      interval) &
- //  0xff;
- //  List<int> param = [
- //    0x3B,
- //    0x00,
- //    0x14,
- //    0x00,
- //    0x01,
- //    0x00,
- //    frequency,
- //    pulseWidth,
- //    fundamentalWave,
- //    carrierWave,
- //    0x00,
- //    bufferTime,
- //    0x00,
- //    duration,
- //    0x00,
- //    bufferTime,
- //    0x00,
- //    interval,
- //    valid,
- //    0x0A
- //  ];
- //  try {
- //    await ConnectManager
- //        .getInstance()
- //        .characteristic
- //        ?.write(param,
- //        withoutResponse: ConnectManager
- //            .getInstance()
- //            .characteristic!
- //            .properties
- //            .writeWithoutResponse);
- //    callBackTenWriteStatus(true);
- //  } catch (e) {
- //    if (kDebugMode) {
- //      print("Write Error:");
- //    }
- //    callBackTenWriteStatus(false);
- //  }
- //}
 
   /// Управление устройством (старт/стоп/пауза/продолжение)
   static Future<void> controlDevice(
