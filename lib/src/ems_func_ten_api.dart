@@ -11,6 +11,7 @@ typedef CallBackTenVersion = void Function(bool isSuccess, String version);
 typedef CallBackTenWriteStatus = void Function(bool isSuccess);
 typedef CallBackPower =
     void Function(bool isSuccess, TenDevicePower tenDevicePower);
+typedef CallBackWriteStatus = void Function(bool isSuccess);
 
 /// Менеджер функций для десятиканального EMS-устройства
 class EmsTenFuncManager {
@@ -18,10 +19,34 @@ class EmsTenFuncManager {
   /// frequency - частота, pulseWidth - ширина импульса
   /// fundamentalWave - основная волна, carrierWave - несущая волна
   /// duration - время работы, interval - время отдыха
-  static Future<void> sendParam(
-      CallBackTenWriteStatus callBackTenWriteStatus,
-      ) async {
-
+  static Future<void> sendParam(int frequency,
+      int pulseWidth,
+      int fundamentalWave,
+      int carrierWave,
+      int duration,
+      int interval,
+      CallBackTenWriteStatus callBackTenWriteStatus) async {
+    int bufferTime = 15;
+    int pulseWidth = 300 ;
+    int fundamentalWave = 50;
+    int valid = (0x3B +
+        0x00 +
+        0x14 +
+        0x00 +
+        0x01 +
+        frequency +
+        pulseWidth +
+        fundamentalWave +
+        carrierWave +
+        0x00 +
+        bufferTime +
+        0x00 +
+        duration +
+        0x00 +
+        bufferTime +
+        0x00 +
+        interval) &
+    0xff;
     List<int> param = [
       0x3B,
       0x00,
@@ -29,37 +54,39 @@ class EmsTenFuncManager {
       0x00,
       0x01,
       0x00,
-      0x32,
-      0x01, 0x2C,
-      0x01,
-      0x01,
-      0x00, 0x0F,
-      0x00, 0x04,
-      0x00, 0x0F,
-      0x00, 0x04,
+      frequency,
+      pulseWidth,
+      fundamentalWave,
+      carrierWave,
+      0x00,
+      bufferTime,
+      0x00,
+      duration,
+      0x00,
+      bufferTime,
+      0x00,
+      interval,
+      valid,
+      0x0A
     ];
-
-    // считаем checksum
-    int valid = param.reduce((a, b) => a + b) & 0xff;
-
-    param.add(valid);
-    param.add(0x0A);
-
     try {
-      await ConnectManager.getInstance().characteristic?.write(
-        param,
-        withoutResponse: ConnectManager.getInstance()
-            .characteristic!
-            .properties
-            .writeWithoutResponse,
-      );
+      await ConnectManager
+          .getInstance()
+          .characteristic
+          ?.write(param,
+          withoutResponse: ConnectManager
+              .getInstance()
+              .characteristic!
+              .properties
+              .writeWithoutResponse);
       callBackTenWriteStatus(true);
     } catch (e) {
-      if (kDebugMode) print("Write Error:");
+      if (kDebugMode) {
+        print("Write Error:");
+      }
       callBackTenWriteStatus(false);
     }
   }
-
 
   /// Управление устройством (старт/стоп/пауза/продолжение)
   static Future<void> controlDevice(
