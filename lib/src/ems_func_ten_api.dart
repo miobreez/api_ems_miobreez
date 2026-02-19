@@ -22,7 +22,7 @@ class EmsTenFuncManager {
   static Future<void> sendParam(
       CallBackTenWriteStatus callBackTenWriteStatus) async {
     int bufferTime = 15;
-    int pulseWidth = 30 ;
+    int pulseWidth = 15 ;
     int frequency = 50;
     int fundamentalWave = 1;
     int carrierWave = 1;
