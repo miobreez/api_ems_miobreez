@@ -27,8 +27,12 @@ class EmsTenFuncManager {
       int interval,
       CallBackTenWriteStatus callBackTenWriteStatus) async {
     int bufferTime = 15;
-    int pulseWidth = 300 ;
-    int fundamentalWave = 50;
+    int pulseWidth = 30 ;
+    int frequency = 50;
+    int fundamentalWave = 1;
+    int carrierWave = 1;
+    int duration = 30;
+    int interval = 2;
     int valid = (0x3B +
         0x00 +
         0x14 +
