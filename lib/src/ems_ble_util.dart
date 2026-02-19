@@ -23,11 +23,13 @@ class BleScanner {
     // Подписка один раз
     FlutterBluePlus.scanResults.listen((event) {
       for (ScanResult element in event) {
+        print("Found device: ${element.device.advName}");
         if (element.device.advName.startsWith("YDSC")) {
           _bleScanController.add(element);
         }
       }
     });
+
   }
 
   Future<void> startBleScan() async {
