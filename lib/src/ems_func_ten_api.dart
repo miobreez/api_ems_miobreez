@@ -182,26 +182,4 @@ class EmsTenFuncManager {
     }
   }
 
-  /// Выключение устройства
-  static Future<void> closeDevice(
-    CallBackTenWriteStatus callBackTenWriteStatus,
-  ) async {
-    int valid = (0x3B + 0x00 + 0x07 + 0x00 + 0x0e) & 0xff;
-    List<int> bytes = [0x3B, 0x00, 0x07, 0x00, 0x0e, valid, 0x0A];
-
-    try {
-      await ConnectManager.getInstance().characteristic?.write(
-        bytes,
-        withoutResponse: ConnectManager.getInstance()
-            .characteristic!
-            .properties
-            .writeWithoutResponse,
-      );
-      callBackTenWriteStatus(true);
-    } catch (e) {
-      if (kDebugMode) print("Write Error:");
-      callBackTenWriteStatus(false);
-    }
-  }
-
 }
