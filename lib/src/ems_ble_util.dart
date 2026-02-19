@@ -17,39 +17,32 @@ class BleUtil {
 
 /// Сканер BLE-устройств
 class BleScanner {
-  /// Контроллер для потока сканирования
-  final _bleScanController = StreamController<ScanResult?>();
+  final _bleScanController = StreamController<ScanResult?>.broadcast();
 
-  /// Начать сканирование BLE-устройств
-  Future<void> startBleScan() async {
-    // Подписка на результаты сканирования
+  BleScanner() {
+    // Подписка один раз
     FlutterBluePlus.scanResults.listen((event) {
       for (ScanResult element in event) {
-        // Фильтруем устройства по известным именам
         if (element.device.advName.startsWith("YDSC")) {
-          // Добавляем найденное устройство в поток
           _bleScanController.add(element);
         }
       }
     });
+  }
 
-    // Запуск сканирования BLE на 10 секунд
+  Future<void> startBleScan() async {
     await FlutterBluePlus.startScan(
       withServices: [
-        // При необходимости можно добавить UUID сервисов для фильтрации
-         Guid.fromString(kServiceUUID),
-         Guid.fromString(kServiceUUID1)
+        Guid.fromString(kServiceUUID),
+        Guid.fromString(kServiceUUID1),
       ],
       timeout: const Duration(seconds: 10),
     );
   }
 
-  /// Остановить сканирование BLE
   Future<void> stopBleScan() async {
     await FlutterBluePlus.stopScan();
   }
 
-  /// Поток сканирования BLE-устройств
-  /// Подписчики получают найденные ScanResult
   Stream<ScanResult?> get bleScanStream => _bleScanController.stream;
 }
