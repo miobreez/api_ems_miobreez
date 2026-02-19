@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
-import 'ems_const_data.dart';
 
 /// Утилитарные функции для работы с BLE
 class BleUtil {
@@ -34,10 +33,6 @@ class BleScanner {
 
   Future<void> startBleScan() async {
     await FlutterBluePlus.startScan(
-      withServices: [
-        Guid.fromString(kServiceUUID),
-        Guid.fromString(kServiceUUID1),
-      ],
       timeout: const Duration(seconds: 10),
     );
   }
